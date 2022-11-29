@@ -10,3 +10,4 @@ tokio = { version = "1", features = ["full"] }
 discord-rich-presence = "0.2.3"
 chrono = "0.4.23"
 lastfm-rs = "0.5.0"
+openssl-sys = "0.9.78"

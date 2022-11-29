@@ -454,6 +454,7 @@ dependencies = [
  "chrono",
  "discord-rich-presence",
  "lastfm-rs",
+ "openssl-sys",
  "tokio",
 ]
 
