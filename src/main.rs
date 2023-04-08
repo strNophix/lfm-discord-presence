@@ -50,13 +50,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         match &last_track.attrs {
                             Some(_) => {
                                 let details =
-                                    format!("{} - {}", last_track.artist.name, last_track.name);
+                                    format!("{} - {}", &last_track.artist.name, last_track.name);
                                 println!(
                                     "{} Currently playing: {:#?}",
                                     Local::now().format("%Y/%m/%d %H:%M:%S"),
                                     details
                                 );
-                                let state = format!("on {}", last_track.album.name);
+
+                                let album_name: String;
+                                if last_track.album.name.len() > 0 {
+                                    album_name = last_track.album.name.clone();
+                                } else {
+                                    album_name = last_track.name.clone()
+                                }
+
+                                let state = format!("on {}", album_name);
                                 let activity = Activity::new()
                                     .assets(
                                         Assets::new()
