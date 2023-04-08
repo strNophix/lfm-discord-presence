@@ -1,6 +1,6 @@
-use chrono::{Duration, Local, Utc};
+use chrono::{Duration, Local};
 use discord_rich_presence::{
-    activity::{Activity, Assets, Button, Timestamps},
+    activity::{Activity, Assets, Button},
     DiscordIpc, DiscordIpcClient,
 };
 use std::{
@@ -35,7 +35,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     tokio::spawn(async move {
         let user_url = format!("https://www.last.fm/user/{}", lfm_username);
-        let started_at = Utc::now();
         loop {
             match recv_stop.try_recv() {
                 Err(oneshot::error::TryRecvError::Empty) => {
@@ -66,7 +65,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                                     )
                                     .details(details.as_str())
                                     .state(state.as_str())
-                                    .timestamps(Timestamps::new().start(started_at.timestamp()))
                                     .buttons(vec![Button::new("Profile", &user_url)]);
 
                                 let mut ipc_client = _ipc_client2.lock().unwrap();
