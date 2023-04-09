@@ -10,7 +10,8 @@ Discord Rich Presence for LastFM.
 ## Usage
 ### Setup
 ```bash
-git clone https://git.cesium.pw/niku/lfm-discord-presence.git && cd $_
+git clone https://git.cesium.pw/niku/lfm-discord-presence.git
+cd lfm-discord-presence
 cp .env.sample .env
 ```
 ### Using systemd
