@@ -51,33 +51,36 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             Some(_) => {
                                 let details =
                                     format!("{} - {}", &last_track.artist.name, last_track.name);
+
                                 println!(
                                     "{} Currently playing: {:#?}",
                                     Local::now().format("%Y/%m/%d %H:%M:%S"),
                                     details
                                 );
 
-                                let album_name: String;
-                                if last_track.album.name.len() > 0 {
-                                    album_name = last_track.album.name.clone();
+                                let album_name: String = if last_track.album.name.is_empty() {
+                                    last_track.name.clone()
                                 } else {
-                                    album_name = last_track.name.clone()
-                                }
+                                    last_track.album.name.clone()
+                                };
+
+                                let album_art = if last_track.images[2].image_url.is_empty() {
+                                    "https://lastfm.freetls.fastly.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png"
+                                } else {
+                                    last_track.images[2].image_url.as_str()
+                                };
 
                                 let state = format!("on {}", album_name);
+                                let assets =
+                                    Assets::new().large_image(&album_art).large_text(&details);
                                 let activity = Activity::new()
-                                    .assets(
-                                        Assets::new()
-                                            .large_image(last_track.images[2].image_url.as_str())
-                                            .large_text(&details),
-                                    )
+                                    .assets(assets)
                                     .details(details.as_str())
                                     .state(state.as_str())
                                     .buttons(vec![Button::new("Profile", &user_url)]);
 
                                 let mut ipc_client = _ipc_client2.lock().unwrap();
                                 ipc_client.set_activity(activity).unwrap();
-                                drop(ipc_client);
                             }
                             None => {
                                 println!(
