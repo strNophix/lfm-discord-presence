@@ -13,19 +13,20 @@ use tokio::{
     sync::oneshot::{self, channel},
 };
 
+const DISCORD_APP_ID: &'static str = env!("DISCORD_APP_ID", "Missing DISCORD_APP_ID in env");
+const LFM_API_KEY: &'static str = env!("LASTFM_API_KEY", "Missing LASTFM_API_KEY in env");
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let discord_app_id = env::var("DISCORD_APP_ID").expect("Missing DISCORD_APP_ID in env");
-    let lfm_username = env::var("LASTFM_USERNAME").expect("Missing LASTFM_USERNAME in env");
-    let lfm_api_key = env::var("LASTFM_API_KEY").expect("Missing LASTFM_API_KEY in env");
-
     let (send_stop, mut recv_stop) = channel::<()>();
 
-    let mut lfm = lastfm_rs::Client::new(lfm_api_key.as_str());
+    let lfm_username = std::env::args()
+        .nth(1)
+        .expect("No LastFM username provided");
+    let mut lfm = lastfm_rs::Client::new(LFM_API_KEY);
 
     let _ipc_client = Arc::new(Mutex::new(
-        DiscordIpcClient::new(discord_app_id.as_str())
-            .expect("failed to create Discord IPC-client"),
+        DiscordIpcClient::new(DISCORD_APP_ID).expect("failed to create Discord IPC-client"),
     ));
     let _ipc_client2 = Arc::clone(&_ipc_client);
 

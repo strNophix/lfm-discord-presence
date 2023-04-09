@@ -1,0 +1,11 @@
+[Unit]
+Description=Discord Rich Presence for LastFM
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/lfm-discord-presence LASTFM_USERNAME
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
